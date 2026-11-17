@@ -1,7 +1,7 @@
 'use strict';
 const express = require('express');
 const { db } = require('../db');
-const { hashPassword, verifyPassword, setSessionCookie, clearSessionCookie, rateLimit } = require('../auth');
+const { hashPassword, verifyPassword, setSessionCookie, clearSessionCookie, rateLimit, isAdminEmail } = require('../auth');
 const { validateSignup, fail } = require('../validate');
 
 const router = express.Router();
@@ -21,7 +21,7 @@ router.post('/signup', limiter, wrap(async (req, res) => {
   const hash = await hashPassword(value.password);
   const info = db.prepare('INSERT INTO users (name, email, password_hash, role) VALUES (?,?,?,?)')
     .run(value.name, value.email, hash, value.role);
-  const user = { id: Number(info.lastInsertRowid), name: value.name, email: value.email, role: value.role };
+  const user = { id: Number(info.lastInsertRowid), name: value.name, email: value.email, role: value.role, isAdmin: isAdminEmail(value.email) };
   setSessionCookie(req, res, user.id);
   res.status(201).json({ user });
 }));
@@ -40,7 +40,7 @@ router.post('/login', limiter, wrap(async (req, res) => {
     return res.status(401).json({ error: 'Incorrect email or password.' });
 
   setSessionCookie(req, res, row.id);
-  res.json({ user: { id: row.id, name: row.name, email: row.email, role: row.role } });
+  res.json({ user: { id: row.id, name: row.name, email: row.email, role: row.role, isAdmin: isAdminEmail(row.email) } });
 }));
 
 router.post('/logout', (req, res) => {

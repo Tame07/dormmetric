@@ -81,9 +81,16 @@ function clearSessionCookie(res) {
 /* ---------- middleware ---------- */
 const findUser = db.prepare('SELECT id, name, email, role FROM users WHERE id = ?');
 
+function isAdminEmail(email) {
+  const list = (process.env.ADMIN_EMAIL || 'ibeadaniel689@gmail.com').split(',').map((s) => s.trim().toLowerCase()).filter(Boolean);
+  return !!email && list.includes(email.toLowerCase());
+}
+
 function attachUser(req, _res, next) {
   const data = readToken(parseCookies(req.headers.cookie)[COOKIE]);
-  req.user = data ? findUser.get(data.uid) || null : null;
+  const user = data ? findUser.get(data.uid) || null : null;
+  if (user) user.isAdmin = isAdminEmail(user.email);
+  req.user = user;
   next();
 }
 
@@ -119,5 +126,5 @@ function rateLimit({ windowMs, max, message }) {
 
 module.exports = {
   hashPassword, verifyPassword, setSessionCookie, clearSessionCookie,
-  attachUser, requireAuth, requireRole, rateLimit
+  attachUser, requireAuth, requireRole, rateLimit, isAdminEmail
 };

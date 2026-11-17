@@ -170,8 +170,22 @@ function authModal(type){
 function detail(id){
  const d=dorms.find(x=>x.id===Number(id));if(!d)return;
  if(!viewedThisSession.has(d.id)){viewedThisSession.add(d.id);api(`/dorms/${d.id}/view`,{method:"POST"}).catch(()=>{})}
- openModal(`<div class="modal-logo">DORMMETRIC LISTING</div><img class="detail-image" src="${safe(d.image)}" alt="${safe(d.name)}" onerror="this.style.opacity='.2'"><h2 id="modalTitle">${safe(d.name)}</h2><p>⌖ ${safe(d.location)}</p><div class="detail-price">${money(d.price)} <span style="font-size:12px;color:#7d8ea5;font-weight:500">/ month</span></div><p>${safe(d.description)}</p><div class="detail-facts"><div class="detail-fact"><small>Room type</small><strong>${safe(d.room)}</strong></div><div class="detail-fact"><small>Estimated utilities</small><strong>${money(d.utilities)} / month</strong></div><div class="detail-fact"><small>Approx. distance</small><strong>${d.distance} km from campus*</strong></div><div class="detail-fact"><small>Availability</small><strong>${d.available?d.spaces+" spaces listed":"Currently full"}</strong></div></div><strong style="font-size:11px">Listed amenities</strong><div class="detail-amenities">${d.amenities.map(a=>`<span>✓ ${safe(a)}</span>`).join("")}</div><p style="font-size:10px">*Distance and listing details are provided by the dorm owner. Confirm location, price, inclusions, and availability directly with the owner.</p><button class="btn btn-primary" id="contactOwner" style="width:100%" ${d.available?"":"disabled"}>Request owner contact <span>→</span></button>`);
+ const adminBtn = state.user && state.user.isAdmin
+  ? `<button class="btn btn-outline btn-danger" id="adminDeleteDorm" style="width:100%;margin-top:8px">Delete listing (Admin)</button>`
+  : "";
+ openModal(`<div class="modal-logo">DORMMETRIC LISTING</div><img class="detail-image" src="${safe(d.image)}" alt="${safe(d.name)}" onerror="this.style.opacity='.2'"><h2 id="modalTitle">${safe(d.name)}</h2><p>⌖ ${safe(d.location)}</p><div class="detail-price">${money(d.price)} <span style="font-size:12px;color:#7d8ea5;font-weight:500">/ month</span></div><p>${safe(d.description)}</p><div class="detail-facts"><div class="detail-fact"><small>Room type</small><strong>${safe(d.room)}</strong></div><div class="detail-fact"><small>Estimated utilities</small><strong>${money(d.utilities)} / month</strong></div><div class="detail-fact"><small>Approx. distance</small><strong>${d.distance} km from campus*</strong></div><div class="detail-fact"><small>Availability</small><strong>${d.available?d.spaces+" spaces listed":"Currently full"}</strong></div></div><strong style="font-size:11px">Listed amenities</strong><div class="detail-amenities">${d.amenities.map(a=>`<span>✓ ${safe(a)}</span>`).join("")}</div><p style="font-size:10px">*Distance and listing details are provided by the dorm owner. Confirm location, price, inclusions, and availability directly with the owner.</p><button class="btn btn-primary" id="contactOwner" style="width:100%" ${d.available?"":"disabled"}>Request owner contact <span>→</span></button>${adminBtn}`);
  $("#contactOwner").addEventListener("click",()=>contactOwner(d));
+ if($("#adminDeleteDorm")){
+  $("#adminDeleteDorm").addEventListener("click",async()=>{
+   if(!confirm(`Delete "${d.name}" permanently from the website?`))return;
+   try{
+    await api(`/dorms/${d.id}`,{method:"DELETE"});
+    closeModal();
+    await refreshListings();
+    toast("Listing deleted by admin.");
+   }catch(ex){toast(ex.message)}
+  });
+ }
 }
 function contactOwner(d){
  if(!state.user){toast("Please log in with a student account to contact the owner.");authModal("login");return}

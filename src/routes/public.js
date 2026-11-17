@@ -1,8 +1,9 @@
 'use strict';
 const express = require('express');
 const { db } = require('../db');
-const { rateLimit } = require('../auth');
+const { rateLimit, requireAuth } = require('../auth');
 const { getPublishedDorms, getDormRow, toDorm, marketAnalytics } = require('../models');
+const { deleteUpload } = require('../images');
 const { isInt } = require('../validate');
 
 const router = express.Router();
@@ -16,6 +17,16 @@ router.get('/dorms/:id', (req, res) => {
   const row = isInt(req.params.id) ? getDormRow(Number(req.params.id)) : null;
   if (!row || !row.is_published) return res.status(404).json({ error: 'Dorm not found.' });
   res.json({ dorm: toDorm(row) });
+});
+
+// Admin moderation: delete any dorm listing
+router.delete('/dorms/:id', requireAuth, (req, res) => {
+  if (!req.user.isAdmin) return res.status(403).json({ error: 'Admin access required.' });
+  const row = isInt(req.params.id) ? getDormRow(Number(req.params.id)) : null;
+  if (!row) return res.status(404).json({ error: 'Dorm not found.' });
+  db.prepare('DELETE FROM dorms WHERE id = ?').run(row.id);
+  deleteUpload(row.image);
+  res.json({ ok: true });
 });
 
 // Counts a "details opened" view so owners can see interest in their listing.
