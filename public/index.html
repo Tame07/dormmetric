@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="DormMetric helps BatStateU students discover student-friendly dormitories and turns housing data into useful insights.">
+  <title>DormMetric | Student Housing & Analytics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2722%27 fill=%27%23B91C1C%27/%3E%3Ctext x=%2750%27 y=%2772%27 font-size=%2770%27 text-anchor=%27middle%27 fill=%27white%27%3E%E2%8C%82%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="announcement"><span class="pulse"></span> Built for the BatStateU Alangilan student community <button id="announcementClose" aria-label="Dismiss announcement">×</button></div>
+  <header class="site-header" id="top">
+    <div class="nav-wrap">
+      <a class="brand" href="#home" aria-label="DormMetric home"><span class="brand-mark">⌂</span><span>Dorm<span>Metric</span></span></a>
+      <button class="icon-button menu-toggle" id="menuToggle" aria-label="Open navigation menu" aria-expanded="false"><span></span><span></span><span></span></button>
+      <nav class="main-nav" id="mainNav">
+        <a class="nav-link active" href="#home">Home</a>
+        <a class="nav-link" href="#dorms">Find Dorms</a>
+        <a class="nav-link" href="#insights">Housing Insights</a>
+        <a class="nav-link" href="#how-it-works">How It Works</a>
+        <a class="nav-link" href="#about">About</a>
+      </nav>
+      <div class="nav-actions">
+        <button class="btn btn-quiet" data-auth="login">Log in</button>
+        <button class="btn btn-primary" data-auth="signup">Sign up <span>↗</span></button>
+      </div>
+    </div>
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#home">Home</a><a href="#dorms">Find Dorms</a><a href="#insights">Housing Insights</a><a href="#how-it-works">How It Works</a><a href="#about">About DormMetric</a>
+      <div class="mobile-actions"><button class="btn btn-quiet" data-auth="login">Log in</button><button class="btn btn-primary" data-auth="signup">Create account</button></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-glow"></div>
+      <div class="hero-copy">
+        <div class="eyebrow eyebrow-light"><span class="eyebrow-dot"></span> YOUR NEXT CHAPTER STARTS HERE</div>
+        <h1>Find your space.<br>Focus on your <span class="rotating-word" id="rotatingWord">future.</span></h1>
+        <p class="hero-lead">Discover student-friendly dormitories around BatStateU Alangilan, compare your options, and choose with confidence.</p>
+        <div class="hero-search">
+          <span class="search-symbol">⌕</span>
+          <input id="heroSearch" type="search" placeholder="Search dorm name, location, or amenity..." aria-label="Search dormitories">
+          <button class="btn btn-primary" id="heroSearchBtn">Search <span>→</span></button>
+        </div>
+        <div class="hero-tags"><span>✓ Student-friendly options</span><span>✓ Compare prices</span><span>✓ Data-backed insights</span></div>
+      </div>
+      <div class="hero-visual">
+        <img class="campus-image" src="https://images.unsplash.com/photo-1562774053-701939374585?auto=format&fit=crop&w=1400&q=85" alt="University campus building" onerror="this.style.display='none'">
+        <div class="campus-image-overlay"></div>
+        <div class="floating-card campus-card"><span class="pin-icon">⌖</span><div><strong>BatStateU Alangilan</strong><small>Your campus, closer to home</small></div></div>
+      </div>
+      <div class="hero-bottom-shape"></div>
+    </section>
+
+    <section class="quick-stats section-shell" aria-label="Platform overview">
+      <div class="quick-stat"><span class="stat-icon blue">⌂</span><div><strong id="statDorms">12+</strong><small>Active listings</small></div></div>
+      <div class="quick-stat"><span class="stat-icon green">₱</span><div><strong id="statRange">₱1,500–₱5,000</strong><small>Monthly rent range</small></div></div>
+      <div class="quick-stat"><span class="stat-icon purple">⌖</span><div><strong>Near campus</strong><small>Alangilan, Batangas City</small></div></div>
+      <div class="quick-stat"><span class="stat-icon orange">▤</span><div><strong>Housing insights</strong><small>Turn listings into information</small></div></div>
+    </section>
+
+    <section class="section-shell dorm-section section-pad" id="dorms">
+      <div class="section-heading heading-row">
+        <div><div class="eyebrow">DISCOVER ACCOMMODATION</div><h2>Find a dorm that fits <span class="text-gradient">your life.</span></h2><p>Browse options and compare the details that matter to you.</p></div>
+        <button class="btn btn-outline" id="resetFilters">↺ Reset filters</button>
+      </div>
+      <div class="finder-layout">
+        <aside class="filter-panel" id="filterPanel">
+          <div class="filter-head"><div><strong>Refine your search</strong><small>Find your best fit</small></div><button class="text-button" id="clearFilters">Clear all</button></div>
+          <label class="field-label" for="filterSearch">Keyword</label>
+          <div class="input-with-icon"><span>⌕</span><input id="filterSearch" type="search" placeholder="Name, area, amenity"></div>
+          <div class="filter-group">
+            <div class="filter-label-row"><label class="field-label" for="priceRange">Monthly budget</label><strong id="priceValue">₱3,500</strong></div>
+            <input id="priceRange" class="range-input" type="range" min="1000" max="5000" step="100" value="5000">
+            <div class="range-ends"><span>₱1,000</span><span>₱3,500+</span></div>
+          </div>
+          <div class="filter-group"><label class="field-label" for="roomType">Room type</label><select id="roomType"><option value="all">All room types</option><option>Shared Room</option><option>Private Room</option><option>Bunk Bed</option><option>Studio Type</option></select></div>
+          <div class="filter-group"><label class="field-label" for="availability">Availability</label><select id="availability"><option value="all">Any availability</option><option value="available">Available now</option><option value="limited">Limited spaces</option></select></div>
+          <div class="filter-group">
+            <span class="field-label">Amenities & inclusions</span>
+            <div class="check-list">
+              <label class="check-option"><input type="checkbox" value="Wi-Fi" class="amenity-check"><span class="custom-check"></span>Wi-Fi</label>
+              <label class="check-option"><input type="checkbox" value="Furnished" class="amenity-check"><span class="custom-check"></span>Furnished</label>
+              <label class="check-option"><input type="checkbox" value="Laundry" class="amenity-check"><span class="custom-check"></span>Laundry</label>
+              <label class="check-option"><input type="checkbox" value="Utilities included" class="amenity-check"><span class="custom-check"></span>Utilities included</label>
+              <label class="check-option"><input type="checkbox" value="CCTV" class="amenity-check"><span class="custom-check"></span>CCTV / security</label>
+            </div>
+          </div>
+          <div class="filter-note"><span>✦</span><p><strong>Smart tip</strong><br>Remember to compare estimated utilities, not rent alone.</p></div>
+        </aside>
+
+        <div class="results-area">
+          <div class="results-toolbar"><div><strong id="resultsTitle">Featured dormitories</strong><span id="resultsCount">Loading listings…</span></div><div class="sort-wrap"><label for="sortSelect">Sort by</label><select id="sortSelect"><option value="recommended">Recommended</option><option value="price-low">Price: low to high</option><option value="price-high">Price: high to low</option><option value="rating">Highest rating</option></select></div><button class="btn btn-outline mobile-filter-button" id="mobileFilterButton">☷ Filters</button></div>
+          <div class="active-filters" id="activeFilters"></div>
+          <div class="dorm-grid" id="dormGrid"></div>
+          <div class="empty-state hidden" id="emptyState"><div class="empty-icon">⌕</div><h3>No matching dorms yet</h3><p>Try increasing your budget or removing a filter.</p><button class="btn btn-primary" id="emptyReset">Clear filters</button></div>
+          <div class="load-more-wrap"><button class="btn btn-outline" id="loadMore">Explore all listings <span>↓</span></button></div>
+          <p class="demo-note">Listings are posted by dormitory owners. Verify the location, price, inclusions, and availability directly with the owner before booking.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="insights-section section-pad" id="insights">
+      <div class="section-shell">
+        <div class="section-heading heading-row"><div><div class="eyebrow">BUSINESS ANALYTICS</div><h2>Housing data, made <span class="text-gradient">useful.</span></h2><p>DormMetric is more than a directory. It organizes housing information to support better decisions.</p></div><span class="analytics-badge"><span class="pulse"></span> Live market snapshot</span></div>
+        <div class="analytics-grid">
+          <article class="analytics-card chart-card"><div class="card-topline"><div><span class="chart-kicker">MARKET OVERVIEW</span><h3>Average rent by room type</h3></div><span class="chart-icon">▥</span></div><p class="chart-subtitle">Average monthly asking prices across published listings.</p><div class="bar-chart" id="rentChart" role="img" aria-label="Average rent by room type chart"></div><div class="chart-legend"><span><i class="legend-dot blue-dot"></i> Average monthly rent</span><span class="data-caption">Live data</span></div></article>
+          <article class="analytics-card"><div class="card-topline"><div><span class="chart-kicker">STUDENT PREFERENCES</span><h3>Popular inclusions</h3></div><span class="chart-icon green-icon">♡</span></div><p class="chart-subtitle">How often amenities appear in published listings.</p><div class="amenity-bars" id="amenityChart"></div><div class="insight-callout"><span>✦</span><p id="amenityInsight">Explore the sample dataset to see which amenities are commonly listed.</p></div></article>
+          <article class="analytics-card insight-card"><span class="chart-kicker">DECISION SUPPORT</span><div class="insight-illustration">↗</div><h3>Compare the whole picture.</h3><p>Rent is only one part of a housing decision. Compare room type, amenities, estimated utilities, availability, and distance together.</p><div class="insight-mini-grid"><div><strong id="avgRent">₱2,640</strong><small>Avg. rent</small></div><div><strong id="availableCount">9</strong><small>Available listings</small></div></div><button class="text-link" id="jumpToDorms">Explore listings <span>→</span></button></article>
+        </div>
+        <p class="analytics-disclaimer">Analytics are calculated from the listings published on DormMetric. They are not official BatStateU housing statistics.</p>
+      </div>
+    </section>
+
+    <section class="section-shell section-pad benefits-section" id="about">
+      <div class="section-heading"><div class="eyebrow">WHY DORMMETRIC</div><h2>Make your next move <span class="text-gradient">with confidence.</span></h2><p>One place to discover options, compare details, and understand the local student-housing landscape.</p></div>
+      <div class="benefit-grid">
+        <article class="benefit-card"><div class="benefit-icon icon-blue">✓</div><h3>Structured listings</h3><p>Compare dorms using consistent details instead of scattered posts.</p></article>
+        <article class="benefit-card"><div class="benefit-icon icon-green">₱</div><h3>Budget-aware search</h3><p>Filter by monthly rent, room type, and included amenities.</p></article>
+        <article class="benefit-card"><div class="benefit-icon icon-purple">⌖</div><h3>Campus-centered</h3><p>Focus on accommodation around BatStateU Alangilan.</p></article>
+        <article class="benefit-card"><div class="benefit-icon icon-orange">▥</div><h3>Analytics for owners</h3><p>Use aggregated listing data to understand prices and amenities in the market.</p></article>
+      </div>
+    </section>
+
+    <section class="steps-section section-pad" id="how-it-works"><div class="section-shell"><div class="section-heading centered"><div class="eyebrow">A SIMPLER WAY TO SEARCH</div><h2>Three steps to a <span class="text-gradient">better shortlist.</span></h2><p>Start with what matters most to you.</p></div>
+      <div class="steps-grid"><article class="step-card"><div class="step-number">01</div><div class="step-icon">⌕</div><h3>Search</h3><p>Look for dormitories by name, location, price, or amenities.</p></article><div class="step-connector">→</div><article class="step-card"><div class="step-number">02</div><div class="step-icon">▦</div><h3>Compare</h3><p>Review rent, room type, inclusions, and availability side by side.</p></article><div class="step-connector">→</div><article class="step-card"><div class="step-number">03</div><div class="step-icon">✓</div><h3>Contact & decide</h3><p>Use the listing information to follow up with the dorm owner.</p></article></div>
+    </div></section>
+
+    <section class="owner-cta section-shell"><div class="owner-cta-content"><div class="eyebrow eyebrow-light">FOR DORMITORY OWNERS</div><h2>Help students find a place to call home.</h2><p>Showcase your property and learn how your listing compares with the local market.</p><button class="btn btn-white" data-auth="owner">Explore owner tools <span>→</span></button></div><div class="owner-cta-art"><div class="floating-metric"><span>LISTING INSIGHTS</span><strong>Price · Amenities · Demand</strong><div class="tiny-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="orb orb-one"></div><div class="orb orb-two"></div></div></section>
+  </main>
+
+  <footer class="site-footer"><div class="section-shell footer-main"><div class="footer-brand"><a class="brand brand-light" href="#home"><span class="brand-mark">⌂</span><span>Dorm<span>Metric</span></span></a><p>Your home near BatStateU.<br>Find better. Compare smarter.</p></div><div class="footer-column"><strong>Explore</strong><a href="#dorms">Find Dorms</a><a href="#insights">Housing Insights</a><a href="#how-it-works">How It Works</a></div><div class="footer-column"><strong>About</strong><a href="#about">Our Purpose</a><a href="#about">For Students</a><a href="#about">For Owners</a></div><div class="footer-contact"><strong>Student housing, organized.</strong><p>A Business Analytics student project for IT 314 Web Systems and Technologies.</p><a href="#top" class="back-top">Back to top ↑</a></div></div><div class="footer-bottom section-shell"><span>© 2026 DormMetric · Academic prototype</span><span>Built for learning and better housing decisions.</span></div></footer>
+
+  <div class="modal-backdrop hidden" id="modalBackdrop" role="presentation">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close dialog">×</button>
+      <div id="modalContent"></div>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
+</body>
+</html>
