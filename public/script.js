@@ -6,7 +6,7 @@ let dorms = [];
 let analytics = null;
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
-const state = {query:"", budget:5000, room:"all", availability:"all", amenities:[], sort:"recommended", showAll:false, saved:new Set(), user:null};
+const state = {query:"", budget:10000, room:"all", availability:"all", amenities:[], sort:"recommended", showAll:false, saved:new Set(), user:null};
 const grid = $("#dormGrid"), modalBackdrop = $("#modalBackdrop"), modalContent = $("#modalContent");
 const viewedThisSession = new Set();
 let toastTimer;
@@ -56,7 +56,7 @@ function filteredDorms(){
 function renderDorms(){
  const all=filteredDorms(), shown=state.showAll?all:all.slice(0,6);
  $("#resultsCount").textContent=`Showing ${all.length} of ${dorms.length} listings`;
- $("#resultsTitle").textContent=state.query||state.amenities.length||state.room!=="all"||state.budget<5000?"Matching dormitories":"Featured dormitories";
+ $("#resultsTitle").textContent=state.query||state.amenities.length||state.room!=="all"||state.budget<10000?"Matching dormitories":"Featured dormitories";
  $("#statDorms").textContent=dorms.length+"";
  grid.innerHTML=shown.map((d,i)=>`<article class="dorm-card" style="animation-delay:${i*45}ms">
   <div class="dorm-image-wrap"><img class="dorm-image" src="${safe(d.image)}" alt="${safe(d.name)} room photo" loading="lazy" onerror="this.style.opacity='.15'"><span class="availability-badge" style="${d.available?'':'background:#fff0e8;color:#a35b24;border-color:#ffdfc7'}">${d.available?(d.spaces<=2?'Limited spaces':'Available now'):'Currently full'}</span></div>
@@ -72,7 +72,7 @@ function renderDorms(){
 function renderChips(){
  const chips=[];
  if(state.query)chips.push(["Search: "+state.query,()=>{state.query="";$("#filterSearch").value="";$("#heroSearch").value="";}]);
- if(state.budget<5000)chips.push(["Up to "+money(state.budget),()=>{state.budget=5000;$("#priceRange").value=5000;}]);
+ if(state.budget<10000)chips.push(["Up to "+money(state.budget),()=>{state.budget=10000;$("#priceRange").value=10000;}]);
  if(state.room!=="all")chips.push([state.room,()=>{state.room="all";$("#roomType").value="all";}]);
  if(state.availability!=="all")chips.push([state.availability==="available"?"Available now":"Limited spaces",()=>{state.availability="all";$("#availability").value="all";}]);
  state.amenities.forEach(a=>chips.push([a,()=>{$(`.amenity-check[value="${CSS.escape(a)}"]`).checked=false;state.amenities=state.amenities.filter(x=>x!==a)}]));
@@ -285,7 +285,7 @@ function dormFormHtml(d){
   <div class="dash-grid">
    <label class="span-2">Dorm name<input name="name" required maxlength="80" value="${safe(v.name)}" placeholder="e.g. Maple Residence"></label>
    <label class="span-2">Location<input name="location" required maxlength="160" value="${safe(v.location)}"></label>
-   <label>Monthly rent (₱)<input name="price" type="number" min="500" max="5000" step="50" required value="${safe(v.price)}"></label>
+   <label>Monthly rent (₱)<input name="price" type="number" min="500" max="10000" step="50" required value="${safe(v.price)}"></label>
    <label>Est. utilities / month (₱)<input name="utilities" type="number" min="0" max="3000" step="50" required value="${safe(v.utilities)}"></label>
    <label>Room type<select name="room">${ROOMS.map(r=>`<option ${r===v.room?"selected":""}>${r}</option>`).join("")}</select></label>
    <label>Available spaces<input name="spaces" type="number" min="0" max="99" required value="${safe(v.spaces)}"></label>
@@ -366,7 +366,7 @@ $("#roomType").addEventListener("change",e=>{state.room=e.target.value;state.sho
 $("#availability").addEventListener("change",e=>{state.availability=e.target.value;state.showAll=false;renderDorms()});
 $$(".amenity-check").forEach(c=>c.addEventListener("change",()=>{state.amenities=$$(".amenity-check:checked").map(x=>x.value);state.showAll=false;renderDorms()}));
 $("#sortSelect").addEventListener("change",e=>{state.sort=e.target.value;renderDorms()});
-function resetFilters(){state.query="";state.budget=5000;state.room="all";state.availability="all";state.amenities=[];state.sort="recommended";state.showAll=false;syncControls();renderDorms()}
+function resetFilters(){state.query="";state.budget=10000;state.room="all";state.availability="all";state.amenities=[];state.sort="recommended";state.showAll=false;syncControls();renderDorms()}
 $("#resetFilters").addEventListener("click",resetFilters);$("#clearFilters").addEventListener("click",resetFilters);$("#emptyReset").addEventListener("click",resetFilters);
 $("#loadMore").addEventListener("click",()=>{state.showAll=!state.showAll;renderDorms()});
 $("#mobileFilterButton").addEventListener("click",()=>{$("#filterPanel").classList.toggle("mobile-open");$("#filterPanel").scrollIntoView({behavior:"smooth",block:"start"})});
