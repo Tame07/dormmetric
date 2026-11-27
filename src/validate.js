@@ -3,8 +3,8 @@
 const ROOM_TYPES = ['Shared Room', 'Private Room', 'Bunk Bed', 'Studio Type'];
 const AMENITIES = ['Wi-Fi', 'Furnished', 'Laundry', 'Utilities included', 'CCTV'];
 const INQUIRY_STATUSES = ['new', 'contacted', 'closed'];
-const MIN_PRICE = 500;
-const MAX_PRICE = 5000; // matches the budget slider on the Find Dorms page
+const MIN_PRICE = 1000;
+const MAX_PRICE = 10000; // matches the budget slider on the Find Dorms page
 
 const str = (v) => (typeof v === 'string' ? v.trim() : '');
 const isInt = (v) => Number.isInteger(v) || (typeof v === 'string' && /^-?\d+$/.test(v.trim()));
@@ -36,8 +36,8 @@ function validateDorm(body = {}) {
     errors.price = `Monthly rent must be a whole number from ₱${MIN_PRICE} to ₱${MAX_PRICE.toLocaleString('en-PH')}.`;
   v.price = Number(body.price);
 
-  if (!isInt(body.utilities) || +body.utilities < 0 || +body.utilities > 3000)
-    errors.utilities = 'Estimated utilities must be a whole number from ₱0 to ₱3,000.';
+  if (!isInt(body.utilities) || +body.utilities < 0 || +body.utilities > 50000)
+    errors.utilities = 'Estimated utilities must be a whole number from ₱0 to ₱5,000.';
   v.utilities = Number(body.utilities);
 
   v.room = body.room;
